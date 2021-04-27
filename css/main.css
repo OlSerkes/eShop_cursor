@@ -1,0 +1,45 @@
+html{
+    font-family: "Gotham Pro";
+    font-weight: 500;
+}
+
+.products-container {
+width: 100%;
+max-width: 800px;
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+}
+
+.product-wrapper {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.product-name {
+    font-size: 16px;
+    text-transform: uppercase;
+
+}
+
+.product-price-wrapper{
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 14px;
+    display: inline-block;
+    padding-right: 15px;
+    margin: 0;
+}
+
+.product-old-price {
+text-decoration: line-through;
+color: #cccccc;
+margin-bottom: 0;
+}
