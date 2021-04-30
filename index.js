@@ -104,6 +104,37 @@ const filterByCategory = (event) => {
     });
     updateData(newData);
 }
+const filterBySizes = () => {
+    const sizeCheckboxes = document.querySelectorAll(".size-checkbox");
+    const activeSizes = Array.from(sizeCheckboxes).reduce((activeSizes, checkbox) => {
+        if(checkbox.checked){
+            activeSizes.push(+checkbox.value)
+        }
+        return activeSizes;
+    }, []);
+    const newData = mockData.filter((product) => {
+        return product.sizes.some((size) => {
+            return activeSizes.includes(size);
+        });
+    });
+    return updateData(newData);
+}
+const filterByPriceFrom = (event) => {
+    const price = +event.target.value;
+    const newData = mockData.filter((product) => {
+        return product.price * (1 - product.discount) >= price;
+    });
+    return updateData(newData);
+}
+const filterByPriceTo = (event) => {
+    const price = +event.target.value;
+    const newData = mockData.filter((product) => {
+        return product.price * (1 - product.discount) <= price;
+    });
+    return updateData(newData);
+}
+
+
 const renderList = (container) => {
     const html = `<div class="products-container">` + data.reduce((html, product) => {
         return html + `
@@ -120,9 +151,6 @@ $${product.price}
 </div>
 </div>
 <div class="button">Add to cart</div>
-
-
-
 </div>
 </div>
 `
@@ -158,11 +186,17 @@ ${categories.map((category) => (`
 <option value="${category}">${category}</option>
 `)).join("")}
 </select>
+<p>
+<input type="number" id="input-price-from" placeholder="Цена от">
+-
+<input type="number" id="input-price-to" placeholder="Цена до">
+</p>
+
 <div class="filter-checkboxes">
 Размеры:
 ${sizes.map((size) => (`
 <p>
-<label for=""><input type="checkbox" value="${size}">${size}</label>
+<label for=""><input type="checkbox" class="size-checkbox" value="${size}">${size}</label>
 </p>
 `)).join("")}
 </div>
@@ -173,6 +207,14 @@ ${sizes.map((size) => (`
     inStockCheckbox.addEventListener("change", filterInStock);
     const categoryFilter = document.querySelector("#category-filter");
     categoryFilter.addEventListener("change", filterByCategory);
+    const sizeCheckboxes = document.querySelectorAll(".size-checkbox");
+    sizeCheckboxes.forEach((sizeCheckbox) => {
+        sizeCheckbox.addEventListener("change", filterBySizes);
+    })
+    const inputPriceFrom = document.querySelector("#input-price-from");
+    inputPriceFrom.addEventListener("change", filterByPriceFrom);
+    const inputPriceTo = document.querySelector("#input-price-to");
+    inputPriceTo.addEventListener("change", filterByPriceTo)
 }
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
