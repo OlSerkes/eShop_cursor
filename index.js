@@ -87,6 +87,38 @@ const updateData = (newData) => {
     renderList(productContainer);
 }
 
+const state = {
+    sortBy: "price",
+    sortOrder: "1",
+    changeState(field, value) {
+        this[field] = value;
+        this.sort();
+},
+    sort(){
+        data = mockData.sort((product1, product2) => {
+            if(this.sortBy === "price"){
+                const price1 = product1.price * (1 - product1.discount);
+                const price2 = product2.price * (1 - product2.discount);
+                return (price1 - price2)*+this.sortOrder;
+            };
+            if(this.sortBy === "category"){
+                return product1.category.localeCompare(product2.category) * this.sortOrder;
+            };
+            if(this.sortBy === "size"){
+                if(this.sortOrder === "-1") {                
+                const maxSize1 = Math.max(...product1.sizes);
+                const maxSize2 = Math.max(...product2.sizes);
+                return maxSize2 - maxSize1;
+            }
+                const minSize1 = Math.min(...product1.sizes);
+                const minSize2 = Math.min(...product2.sizes);
+                return minSize1 - minSize2;
+            }
+        });
+        updateData(data);
+    }
+};
+
 const filterInStock = (event) => {
     const checked = event.target.checked;
     const newData = mockData.filter((product) => {
@@ -133,8 +165,12 @@ const filterByPriceTo = (event) => {
     });
     return updateData(newData);
 }
-
-
+const changeSortBy = (event) => {
+    state.changeState("sortBy", event.target.value);
+}
+const changeSortOrder = (event) => {
+        state.changeState("sortOrder", event.target.value);
+}
 const renderList = (container) => {
     const html = `<div class="products-container">` + data.reduce((html, product) => {
         return html + `
@@ -176,6 +212,21 @@ const renderBase = (container) => {
     const sizes = getSizes(mockData);
     container.innerHTML = `
 <div class="filters-wrapper">
+<p>
+Сортировать по:
+<select id="select-sort-by">
+<option value="price">По цене:</option>
+<option value="size">По размеру:</option>
+<option value="category">По категории:</option>
+</select>
+</p>
+<p>
+Направление сортировки:
+<select id="select-sort-order">
+<option value="1">А > Я</option>
+<option value="-1">Я > А</option>
+</select>
+</p>
 <label>
 <input type="checkbox" id="instock-checkbox">
 Только в наличии
@@ -214,7 +265,11 @@ ${sizes.map((size) => (`
     const inputPriceFrom = document.querySelector("#input-price-from");
     inputPriceFrom.addEventListener("change", filterByPriceFrom);
     const inputPriceTo = document.querySelector("#input-price-to");
-    inputPriceTo.addEventListener("change", filterByPriceTo)
+    inputPriceTo.addEventListener("change", filterByPriceTo);
+    const selectSortBy = document.querySelector("#select-sort-by");
+    selectSortBy.addEventListener("change", changeSortBy);
+    const selectSortOrder = document.querySelector("#select-sort-order");
+    selectSortOrder.addEventListener("change", changeSortOrder);
 }
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
