@@ -1,85 +1,5 @@
-const mockData = [{
-    id: 1,
-    name: 'ADDIDAS XS-135',
-    category: "Household",
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 150,
-    sizes: [41, 42, 43, 45],
-    discount: 0.1,
-    quantity: 10,
-    image: "img/p1.jpg"
-}, {
-    id: 2,
-    name: 'NIKE GX-54',
-    category: "Jogging",
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 250,
-    sizes: [39, 40, 42, 45],
-    discount: 0.15,
-    quantity: 2,
-    image: "img/p2.jpg"
-}, {
-    id: 3,
-    name: 'REEBOK Vlu',
-    category: "For dancing",
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 150,
-    sizes: [41, 43, 47, 49],
-    quantity: 1,
-    discount: 0.1,
-    image: "img/p3.jpg"
-}, {
-    id: 4,
-    name: 'Puma Supercat',
-    category: "Walking",
-    quantity: 0,
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 250,
-    discount: 0.15,
-    sizes: [39, 47, 41, 36],
-    image: "img/p4.jpg"
-}, {
-    id: 5,
-    name: 'ADDIDAS MK-345',
-    category: "Household",
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 150,
-    quantity: 5,
-    discount: 0.1,
-    sizes: [36, 37, 38, 39],
-    image: "img/p5.jpg"
-}, {
-    id: 6,
-    name: 'NIKE PL-654',
-    category: "Jogging",
-    quantity: 3,
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 189.54,
-    discount: 0.3,
-    sizes: [40, 41, 42, 43],
-    image: "img/p6.jpg"
-}, {
-    id: 7,
-    name: 'REEBOK Lightsaber',
-    category: "For dancing",
-    quantity: 150,
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 743,
-    discount: 0.1,
-    sizes: [40, 42, 44, 46],
-    image: "img/p7.jpg"
-}, {
-    id: 8,
-    name: 'Puma Killogram',
-    category: "Walking",
-    description: `Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for something that can make your interior look awesome, and at the same time give you the pleasant warm feeling during the winter.`,
-    price: 599,
-    quantity: 0,
-    discount: 0.35,
-    sizes: [40, 44, 48],
-    image: "img/p8.jpg"
-}]
 let data = [];
+let googleData = [];
 
 const updateData = (newData) => {
     data = [...newData];
@@ -95,7 +15,7 @@ const state = {
         this.sort();
 },
     sort(){
-        data = mockData.sort((product1, product2) => {
+        data = googleData.sort((product1, product2) => {
             if(this.sortBy === "price"){
                 const price1 = product1.price * (1 - product1.discount);
                 const price2 = product2.price * (1 - product2.discount);
@@ -121,7 +41,7 @@ const state = {
 
 const filterInStock = (event) => {
     const checked = event.target.checked;
-    const newData = mockData.filter((product) => {
+    const newData = googleData.filter((product) => {
         if (checked) {
             return product.quantity > 0;
         }
@@ -131,7 +51,7 @@ const filterInStock = (event) => {
 }
 const filterByCategory = (event) => {
     const category = event.target.value;
-    const newData = mockData.filter((product) => {
+    const newData = googleData.filter((product) => {
         return category === "all" || product.category === category;
     });
     updateData(newData);
@@ -144,7 +64,7 @@ const filterBySizes = () => {
         }
         return activeSizes;
     }, []);
-    const newData = mockData.filter((product) => {
+    const newData = googleData.filter((product) => {
         return product.sizes.some((size) => {
             return activeSizes.includes(size);
         });
@@ -153,14 +73,14 @@ const filterBySizes = () => {
 }
 const filterByPriceFrom = (event) => {
     const price = +event.target.value;
-    const newData = mockData.filter((product) => {
+    const newData = googleData.filter((product) => {
         return product.price * (1 - product.discount) >= price;
     });
     return updateData(newData);
 }
 const filterByPriceTo = (event) => {
     const price = +event.target.value;
-    const newData = mockData.filter((product) => {
+    const newData = googleData.filter((product) => {
         return product.price * (1 - product.discount) <= price;
     });
     return updateData(newData);
@@ -174,22 +94,22 @@ const changeSortOrder = (event) => {
 const renderList = (container) => {
     const html = `<div class="products-container">` + data.reduce((html, product) => {
         return html + `
-<div class="product-wrapper">
-<img src="${product.image}" alt="${product.name}" class="product-image">
-<div class="product-name">${product.name}</div>
-<div class="product-price-wrapper">
-<div class="product-price-line"> 
-<div class="product-price">
-$${product.price * (1 - product.discount)}
-</div>
-<div class="product-old-price">
-$${product.price}
-</div>
-</div>
-<div class="button">Add to cart</div>
-</div>
-</div>
-`
+            <a class="product-wrapper" href="#product/${product.id}">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-name">${product.name}</div>
+                <div class="product-price-wrapper">
+                <div class="product-price-line"> 
+                    <div class="product-price">
+                        $${product.price * (1 - product.discount)}
+                    </div>
+                    <div class="product-price product-price-old">
+                        $${product.price}
+                    </div>
+                </div>
+                <div class="button">Add to cart</div>
+                </div>
+            </a>
+        `
     }, "") + `</div>`;
     container.innerHTML = html
 }
@@ -207,10 +127,27 @@ const getSizes = (data) => {
     }, []);
     return [...new Set(allSizes)].sort();
 }
-const renderBase = (container) => {
-    const categories = getCategories(mockData);
-    const sizes = getSizes(mockData);
+const getHeaderHTML = () => {
+    return `
+    <header>
+        <img class="logo" src="img/logo.png" alt="logo">
+        <a class="link" href="#">Home</a>
+        <div class="cart">
+            <div class="cart-count">3</div>
+            <div class="cart-total">$1000</div>
+        </div>
+    </header>
+    
+    
+    `
+}
+
+
+const renderHome = (container) => {
+    const categories = getCategories(googleData);
+    const sizes = getSizes(googleData);
     container.innerHTML = `
+    ${getHeaderHTML()}
 <div class="filters-wrapper">
 <p>
 Сортировать по:
@@ -270,11 +207,68 @@ ${sizes.map((size) => (`
     selectSortBy.addEventListener("change", changeSortBy);
     const selectSortOrder = document.querySelector("#select-sort-order");
     selectSortOrder.addEventListener("change", changeSortOrder);
+    updateData(googleData);
 }
-document.addEventListener("DOMContentLoaded", () => {
-    const container = document.querySelector(".container");
-    renderBase(container);
-    updateData(mockData);
-})
+const renderProduct = (container, product) => {
+    container.innerHTML = `
+        ${getHeaderHTML()}
+        <div class="product-page-wrapper">
+            <img src="${product.image}" alt="${product.name}" class="product-page-image">
+            <div class="product-page-detail">
+                <div class="product-page-name">${product.name}</div>
+                <div class="product-page-price">
+                    $${product.price * (1 - product.discount)}
+                </div>
+                <p>Category: ${product.category}</p>
+                <p>Availability: ${product.quantity > 0 ? "In Stock" : "Out of Stock"}</p> 
+                <div class="product-page-description">
+                    ${product.description}
+                </div>
+                <div class="product-page-quantity">
+                    Quantity: <input type="number">
+                </div>
+                <div class="button">Add to cart</div>
+                </div>               
+        </div>
+    `;
+}
+const container = document.querySelector(".container");
+
+const checkHash = () => {
+    const hash = window.location.hash.replase("#", "");
+    const [path, param] = hash.split("/");
+    switch (path){
+        case "product": {
+           return renderProduct(container, googleData.find((p) => p.id === +param));
+        }
+        default: {
+            return renderHome(container);
+        }
+    }
+}
+window.onhashchange = checkHash;
+
+document.addEventListener("DOMContentLoaded", () => {    
+    fetch("https://sheets.googleapis.com/v4/spreadsheets/1b02uqOkLvoEf59aeRw_mO58vZKJ8uO77lZUwH7xNQMQ/?key=AIzaSyDqCdb2FbPJ13YyhvooHCtkTgBD5iYtJp8&ranges=A1:I100&fields=properties.title,sheets(properties,data.rowData.values)")
+        .then((res) => res.json())
+        .then((json) => {
+           const data = json.sheets[0].data[0].rowData.slice(1).map((row) => {
+               return {
+                id: +row.values[0].formattedValue,
+                name: row.values[1].formattedValue,
+                category: row.values[2].formattedValue,
+                description: row.values[3].formattedValue,
+                price: +row.values[4].formattedValue,
+                sizes: row.values[5].formattedValue.split(",").map((s) => +s),
+                discount: +row.values[6].formattedValue,
+                quantity: +row.values[7].formattedValue,
+                image: row.values[8].formattedValue
+               }
+           }); 
+            googleData = data;            
+            checkHash();
+            
+        });    
+});
 
 
